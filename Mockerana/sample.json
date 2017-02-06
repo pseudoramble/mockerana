@@ -1,0 +1,21 @@
+{
+  "total": 500.00,
+  "steps": [
+    { 
+      "name": "Thing 2",
+      "processed": true,
+      "amount": 450.00
+    },
+    { 
+      "name": "Thing 2",
+      "processed": true,
+      "amount": 50.00
+    }
+  ],
+  "location": {
+    "address": "1 Main Street",
+    "city": "Portsmouth",
+    "state": "NH",
+    "zip": "03801"
+  }
+}
