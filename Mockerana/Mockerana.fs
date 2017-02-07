@@ -10,6 +10,7 @@ type MockData =
     | Real
     | Number
     | Boolean
+    | Money
     | Constrained of MockData * ValueConstraint<MockData> seq
-    | Array of MockData seq
+    | Array of MockData
     | Record of (string * MockData) seq

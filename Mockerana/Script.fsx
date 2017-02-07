@@ -6,18 +6,20 @@ open Mockerana
  
 let record = Record [
  ("name", String);
- ("total", Number);
+ ("total", Money);
  ("location", Record [
    ("address", String)
    ("state", String)
    ("zip", Constrained (String, [Max 5; Min 5]))
  ]);
- ("steps", Array [
+ ("steps", Array(
    Record [
-     ("amount", Real)
+     ("amount", Money)
      ("processed", Boolean)
    ]
- ])
+ ))
 ]
 
-Mockerana.JsonProcessor.run record
+let rng = new System.Random()
+
+printfn "Result \n---------------\n%s" <| Mockerana.JsonProcessor.run record
