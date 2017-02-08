@@ -3,6 +3,7 @@ namespace Mockerana
 type ValueConstraint<'a> =
     | Max of int
     | Min of int
+    | Numeric
 
 type MockData = 
     | String

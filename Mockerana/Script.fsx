@@ -1,5 +1,6 @@
 #r "../packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 #load "Mockerana.fs"
+#load "Constraints.fs"
 #load "JsonProcessor.fs"
 
 open Mockerana
@@ -10,7 +11,7 @@ let record = Record [
  ("location", Record [
    ("address", String)
    ("state", String)
-   ("zip", Constrained (String, [Max 5; Min 5]))
+   ("zip", Constrained (String, [Numeric; Max 5; Min 5]))
  ]);
  ("steps", Array(
    Record [
