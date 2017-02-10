@@ -5,6 +5,15 @@ open FSharp.Data
 module JsonProcessor =
   let rng = new System.Random()
 
+  let location =
+    let chosenLoc = DataLoader.location ()
+    [
+      ("address", JsonValue.String chosenLoc.address)
+      ("city", JsonValue.String chosenLoc.city)
+      ("state", JsonValue.String chosenLoc.state)
+      ("zip", JsonValue.String chosenLoc.zip)
+    ]
+
   let rec runAux (mockData: MockData) : JsonValue = 
     match mockData with
     | Record entries -> 
@@ -21,22 +30,12 @@ module JsonProcessor =
         JsonValue.Number (decimal <| rng.Next())
     | Real -> 
         JsonValue.Float <| rng.NextDouble()
-    | Money -> 
-        JsonValue.Number <| decimal (System.Math.Round((rng.NextDouble() * (float <| rng.Next())), 2))
     | Boolean -> 
         JsonValue.Boolean (rng.NextDouble() >= 0.5)
-    | Constrained (mockDataType, constraints) -> 
-        runConstrainers mockDataType constraints
-
-  and runConstrainers mockDataType constraints = 
-    let initialValue = runAux mockDataType
-
-    match mockDataType with
-     | String -> 
-        let unboxed = match initialValue with JsonValue.String s -> s | _ -> ""
-        let results = Seq.fold (Constraints.overString) unboxed constraints
-        JsonValue.String results
-     | _ -> invalidOp "Constraints not supported on this type at this time"
+    | Money ->
+        JsonValue.Number(decimal <| rng.NextDouble())
+    | Location ->
+        JsonValue.Record((location) |> Array.ofSeq)
 
   let run mockData =
     let toJsonValue = runAux mockData

@@ -1,6 +1,6 @@
 namespace Mockerana
 
-type ValueConstraint<'a> =
+type ValueConstraint =
     | Max of int
     | Min of int
     | Numeric
@@ -12,6 +12,6 @@ type MockData =
     | Number
     | Boolean
     | Money
-    | Constrained of MockData * ValueConstraint<MockData> seq
+    | Location
     | Array of MockData
     | Record of (string * MockData) seq
