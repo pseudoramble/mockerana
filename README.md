@@ -1,6 +1,6 @@
 # Mockerana
 
-Sometimes you just don't wanna write mock data by hand. 
+Sometimes you just don't want to write mock data by hand.
 Sometimes you'd rather just be doing your favorite early-90's dance instead of that.
 
 That's what Mockerana is here to help with. It is a data-generation tool with a few goals in mind:
