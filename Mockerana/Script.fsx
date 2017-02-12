@@ -7,7 +7,7 @@
 open Mockerana
  
 let record = Record [
- ("name", String);
+ ("name", Name None);
  ("total", Money)
  ("location", Location);
  ("steps", Array(

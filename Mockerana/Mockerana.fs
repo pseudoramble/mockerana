@@ -5,6 +5,10 @@ type ValueConstraint =
     | Min of int
     | Numeric
 
+type Gender =
+    | Male
+    | Female
+
 type MockData = 
     | String
     | Integer
@@ -13,5 +17,6 @@ type MockData =
     | Boolean
     | Money
     | Location
+    | Name of Gender option
     | Array of MockData
     | Record of (string * MockData) seq

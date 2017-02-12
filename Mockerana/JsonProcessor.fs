@@ -6,7 +6,7 @@ module JsonProcessor =
   let rng = new System.Random()
 
   let location =
-    let chosenLoc = DataLoader.location ()
+    let chosenLoc = DataLoader.Location.generate ()
     [
       ("address", JsonValue.String chosenLoc.address)
       ("city", JsonValue.String chosenLoc.city)
@@ -34,6 +34,15 @@ module JsonProcessor =
         JsonValue.Boolean (rng.NextDouble() >= 0.5)
     | Money ->
         JsonValue.Number(decimal <| rng.NextDouble())
+    | Name (Some sex) ->
+        let fullName = match sex with 
+                        | Gender.Male -> DataLoader.Name.fullName "male" 
+                        | _ -> DataLoader.Name.fullName "female"
+
+        JsonValue.String(fullName.First + " " + fullName.Last)
+    | Name None ->
+        let fullName = DataLoader.Name.generate ()
+        JsonValue.String(fullName.First + " " + fullName.Last)
     | Location ->
         JsonValue.Record((location) |> Array.ofSeq)
 
