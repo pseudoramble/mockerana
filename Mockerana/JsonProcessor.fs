@@ -14,6 +14,21 @@ module JsonProcessor =
       ("zip", JsonValue.String chosenLoc.zip)
     ]
 
+  let makeFullName sex = 
+    match sex with 
+    | Gender.Male -> DataLoader.Name.fullName "male" 
+    | _ -> DataLoader.Name.fullName "female"
+
+  let makeMoney magnitude =
+    let factor = match magnitude with
+                    | Tens -> decimal 10
+                    | Hundreds -> decimal 100
+                    | Thousands -> decimal 1000
+                    | Millions -> decimal 1000000
+
+    let amount = (decimal <| rng.NextDouble()) * factor
+    JsonValue.Number(System.Math.Round(amount, 2))
+
   let rec runAux (mockData: MockData) : JsonValue = 
     match mockData with
     | Record entries -> 
@@ -32,13 +47,12 @@ module JsonProcessor =
         JsonValue.Float <| rng.NextDouble()
     | Boolean -> 
         JsonValue.Boolean (rng.NextDouble() >= 0.5)
-    | Money ->
-        JsonValue.Number(decimal <| rng.NextDouble())
+    | Money (Some m) ->
+        makeMoney m
+    | Money None ->
+        makeMoney Hundreds
     | Name (Some sex) ->
-        let fullName = match sex with 
-                        | Gender.Male -> DataLoader.Name.fullName "male" 
-                        | _ -> DataLoader.Name.fullName "female"
-
+        let fullName = makeFullName sex
         JsonValue.String(fullName.First + " " + fullName.Last)
     | Name None ->
         let fullName = DataLoader.Name.generate ()

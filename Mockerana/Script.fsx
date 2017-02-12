@@ -8,11 +8,11 @@ open Mockerana
  
 let record = Record [
  ("name", Name None);
- ("total", Money)
+ ("total", Money(Some Hundreds))
  ("location", Location);
  ("steps", Array(
    Record [
-     ("amount", Money)
+     ("amount", Money(Some Tens))
      ("processed", Boolean)
    ]
  ))
