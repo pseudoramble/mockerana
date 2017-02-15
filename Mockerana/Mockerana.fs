@@ -15,6 +15,10 @@ type Magnitude =
     | Thousands
     | Millions
 
+type Primitive =
+    | String of string
+    | Number of decimal
+
 type MockData = 
     | String
     | Integer
@@ -22,6 +26,8 @@ type MockData =
     | Number
     | Boolean
     | Location
+    | Exactly of Primitive
+    | OneOf of Primitive seq
     | Money of Magnitude option
     | Name of Gender option
     | Array of MockData

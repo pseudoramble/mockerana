@@ -7,15 +7,16 @@
 open Mockerana
  
 let record = Record [
- ("name", Name None);
+ ("name", Name None)
  ("total", Money(Some Hundreds))
- ("location", Location);
+ ("location", Location)
  ("steps", Array(
    Record [
      ("amount", Money(Some Tens))
      ("processed", Boolean)
    ]
  ))
+ ("status", OneOf [Primitive.String "Open"; Primitive.String "Closed"])
 ]
 
 let rng = new System.Random()

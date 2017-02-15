@@ -29,6 +29,16 @@ module JsonProcessor =
     let amount = (decimal <| rng.NextDouble()) * factor
     JsonValue.Number(System.Math.Round(amount, 2))
 
+  let extractExactly primitive = 
+    match primitive with
+        | Primitive.String s -> JsonValue.String s
+        | Primitive.Number n -> JsonValue.Number n
+
+
+  let extractOneOf values =
+    let primitive = Array.ofSeq values |> Array.item (rng.Next((Seq.length values)))
+    extractExactly primitive
+
   let rec runAux (mockData: MockData) : JsonValue = 
     match mockData with
     | Record entries -> 
@@ -36,7 +46,11 @@ module JsonProcessor =
         JsonValue.Record (Array.ofSeq results)
     | Array entries -> 
         let results = [1..rng.Next(10)] |> Seq.map (fun _ -> runAux entries)
-        FSharp.Data.JsonValue.Array(results |> Array.ofSeq)
+        JsonValue.Array(results |> Array.ofSeq)
+    | Exactly value ->
+        extractExactly value
+    | OneOf values ->
+        extractOneOf values
     | String -> 
         JsonValue.String (System.Guid.NewGuid() |> string)
     | Number -> 
