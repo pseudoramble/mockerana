@@ -40,7 +40,10 @@ module JsonProcessor =
         | (_, None) -> System.DateTime.MaxValue.Ticks
 
     let generatedTick = (rng.NextDouble() * double (latest - earliest)) + (double earliest)
-    new System.DateTime(int64 generatedTick)
+    System.DateTime(int64 generatedTick)
+
+  let toUniversalTimeString (dateTime:System.DateTime) = 
+    dateTime.ToString("yyyy-MM-ddTHH:MM:ss.FFFZ")
 
   let extractExactly primitive = 
     match primitive with
@@ -88,7 +91,7 @@ module JsonProcessor =
         JsonValue.Record(location () |> Array.ofSeq)
     | DateTime range ->
         let dateTime = makeTime range
-        JsonValue.String(string dateTime)
+        JsonValue.String(toUniversalTimeString dateTime)
 
   let run mockData =
     let toJsonValue = runAux mockData
