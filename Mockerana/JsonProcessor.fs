@@ -5,7 +5,7 @@ open FSharp.Data
 module JsonProcessor =
   let rng = new System.Random()
 
-  let location =
+  let location () =
     let chosenLoc = DataLoader.Location.generate ()
     [
       ("address", JsonValue.String chosenLoc.address)
@@ -72,7 +72,7 @@ module JsonProcessor =
         let fullName = DataLoader.Name.generate ()
         JsonValue.String(fullName.First + " " + fullName.Last)
     | Location ->
-        JsonValue.Record((location) |> Array.ofSeq)
+        JsonValue.Record(location () |> Array.ofSeq)
 
   let run mockData =
     let toJsonValue = runAux mockData
