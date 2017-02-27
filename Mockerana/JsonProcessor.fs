@@ -29,6 +29,19 @@ module JsonProcessor =
     let amount = (decimal <| rng.NextDouble()) * factor
     JsonValue.Number(System.Math.Round(amount, 2))
 
+  let makeTime (range: System.DateTime option * System.DateTime option) = 
+    let earliest = 
+        match range with
+        | (Some earliest, _) -> earliest.Ticks
+        | (None, _) -> System.DateTime.MinValue.Ticks
+    let latest = 
+        match range with
+        | (_, Some latest) -> latest.Ticks
+        | (_, None) -> System.DateTime.MaxValue.Ticks
+
+    let generatedTick = (rng.NextDouble() * double (latest - earliest)) + (double earliest)
+    new System.DateTime(int64 generatedTick)
+
   let extractExactly primitive = 
     match primitive with
         | Primitive.String s -> JsonValue.String s
@@ -73,6 +86,9 @@ module JsonProcessor =
         JsonValue.String(fullName.First + " " + fullName.Last)
     | Location ->
         JsonValue.Record(location () |> Array.ofSeq)
+    | DateTime range ->
+        let dateTime = makeTime range
+        JsonValue.String(string dateTime)
 
   let run mockData =
     let toJsonValue = runAux mockData

@@ -26,6 +26,7 @@ type MockData =
     | Number
     | Boolean
     | Location
+    | DateTime of (System.DateTime option * System.DateTime option)
     | Exactly of Primitive
     | OneOf of Primitive seq
     | Money of Magnitude option

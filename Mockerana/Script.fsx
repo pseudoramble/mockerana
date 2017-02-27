@@ -5,9 +5,11 @@
 #load "JsonProcessor.fs"
 
 open Mockerana
- 
+
+
 let record = Record [
  ("name", Name None)
+ ("expires", DateTime (Some System.DateTime.Now, Some (new System.DateTime(2019, 09, 20))))
  ("total", Money(Some Hundreds))
  ("location", Location)
  ("steps", Array(
