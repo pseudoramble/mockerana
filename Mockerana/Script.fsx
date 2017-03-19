@@ -1,17 +1,16 @@
 #r "../packages/FSharp.Data/lib/net40/FSharp.Data.dll"
 #load "Mockerana.fs"
-#load "Constraints.fs"
 #load "DataLoader.fs"
 #load "JsonProcessor.fs"
 
 open Mockerana
-
 
 let record = Record [
  ("name", Name None)
  ("expires", DateTime (Some System.DateTime.Now, Some (System.DateTime(2019, 09, 20))))
  ("total", Money(Some Hundreds))
  ("location", Location)
+ ("id", Mockerana.Supports.Format.create "warehouse:{%int:len=5;max=1024%},item:{%int%}")
  ("steps", Array(
    Record [
      ("amount", Money(Some Tens))
@@ -21,6 +20,6 @@ let record = Record [
  ("status", OneOf [Primitive.String "Open"; Primitive.String "Closed"])
 ]
 
-let rng = new System.Random()
+let rng = System.Random()
 
 printfn "Result \n---------------\n%s" <| Mockerana.JsonProcessor.run record

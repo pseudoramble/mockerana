@@ -1,6 +1,6 @@
 module DataLoader
   open FSharp.Data
-  let rng = new System.Random()
+  let rng = System.Random()
 
   type Location = 
     {
