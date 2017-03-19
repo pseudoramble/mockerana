@@ -3,7 +3,7 @@ namespace Mockerana
 open FSharp.Data
 
 module JsonProcessor =
-  let rng = new System.Random()
+  let rng = System.Random()
 
   let location () =
     let chosenLoc = DataLoader.Location.generate ()
@@ -40,16 +40,16 @@ module JsonProcessor =
         | (_, None) -> System.DateTime.MaxValue.Ticks
 
     let generatedTick = (rng.NextDouble() * double (latest - earliest)) + (double earliest)
-    System.DateTime(int64 generatedTick)
+    System.DateTime (int64 generatedTick)
 
   let toUniversalTimeString (dateTime:System.DateTime) = 
     dateTime.ToString("yyyy-MM-ddTHH:MM:ss.FFFZ")
 
   let extractExactly primitive = 
     match primitive with
-        | Primitive.String s -> JsonValue.String s
+        | Primitive.Integer i -> JsonValue.Number (decimal i)
         | Primitive.Number n -> JsonValue.Number n
-
+        | Primitive.String s -> JsonValue.String s
 
   let extractOneOf values =
     let primitive = Array.ofSeq values |> Array.item (rng.Next((Seq.length values)))
@@ -92,6 +92,9 @@ module JsonProcessor =
     | DateTime range ->
         let dateTime = makeTime range
         JsonValue.String(toUniversalTimeString dateTime)
+    | Format data ->
+        printfn "Format %A" data
+        JsonValue.String "lol"
 
   let run mockData =
     let toJsonValue = runAux mockData
