@@ -1,6 +1,7 @@
 namespace Mockerana
 
 open FSharp.Data
+open FormatProcessor
 
 module JsonProcessor =
   let rng = System.Random()
@@ -92,9 +93,8 @@ module JsonProcessor =
     | DateTime range ->
         let dateTime = makeTime range
         JsonValue.String(toUniversalTimeString dateTime)
-    | Format data ->
-        printfn "Format %A" data
-        JsonValue.String "lol"
+    | Format (fmt, spec) ->
+        JsonValue.String(FormatProcessor.run fmt spec)
 
   let run mockData =
     let toJsonValue = runAux mockData
