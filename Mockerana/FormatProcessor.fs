@@ -4,7 +4,7 @@ module FormatProcessor =
   open System.Text.RegularExpressions
   let rng = System.Random()
 
-  let generateInt constraints =
+  let extractBounds constraints = 
     let minimum = 
       match Map.tryFind "min" constraints with
         | Some (Primitive.Number p) -> int p
@@ -15,26 +15,47 @@ module FormatProcessor =
         | Some (Primitive.Number p) -> int p
         | Some (_) | None -> System.Int32.MaxValue
 
+    (minimum, maximum)
+
+  let generateInt constraints =
+    let (minimum, maximum) = extractBounds constraints
     rng.Next(minimum, maximum)
+
+  let generateNumber constraints =
+    let (minimum, maximum) = extractBounds constraints
+    (rng.NextDouble() * double (maximum - minimum)) + (double minimum)
+
+  let generateStr constraints = 
+    let (_, maximum) = extractBounds constraints
+    let result = System.Guid.NewGuid() |> string
+    result.Substring(0, maximum)
+
+  let generateBool constraints =
+    let bias = 
+      match Map.tryFind "bias" constraints with
+        | Some (Primitive.Number p) -> double p
+        | Some _ | None -> double 0.5
+
+    rng.NextDouble() >= bias
 
   let generate mockData constraints =
     match mockData with
-    | MockData.Boolean -> rng.NextDouble() >= 0.5 |> string
-    | MockData.Integer -> generateInt constraints |> string
-    | MockData.Number -> rng.NextDouble() |> string
-    | MockData.String -> System.Guid.NewGuid() |> string
-    | _ -> ""
+      | MockData.Boolean -> generateBool constraints |> string
+      | MockData.Integer -> generateInt constraints |> string
+      | MockData.Number -> generateNumber constraints |> string
+      | MockData.String -> generateStr constraints
+      | _ -> ""
   
   let rollFormat (fmt: string) (values: string * string) =
-    let (replaceWith, replaceSpot) = values
-    ("", fmt.Replace(replaceSpot, replaceWith))
+    let (that, this) = values
+    fmt.Replace(this, that)
 
   let run (fmt: string) (spec: ConstrainedData seq) =
     let replaceWith = Seq.map (fun (mockData, constraints) -> generate mockData constraints) spec
     let replacementSpots = Regex.Matches(fmt, "{%([a-zA-Z0-9=:;]+)%}") |> Seq.cast<Match> |> Seq.map (fun m -> m.Value)
     
-    let (_, finalResult) = 
+    let finalResult = 
       Seq.zip replaceWith replacementSpots
-      |> Seq.mapFold rollFormat fmt
+      |> Seq.fold rollFormat fmt
     
     finalResult

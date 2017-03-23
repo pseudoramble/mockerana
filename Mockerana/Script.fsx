@@ -11,7 +11,7 @@ let record = Record [
  ("expires", DateTime (Some System.DateTime.Now, Some (System.DateTime(2019, 09, 20))))
  ("total", Money(Some Hundreds))
  ("location", Location)
- ("id", Mockerana.Supports.Format.create "warehouse:{%int:max=12345%},item:{%int%}")
+ ("id", Mockerana.Supports.Format.create "warehouse:{%int:min=1000;max=9999%},item:{%str:max=5%}")
  ("steps", Array(
    Record [
      ("amount", Money(Some Tens))
