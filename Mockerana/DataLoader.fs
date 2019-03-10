@@ -1,70 +1,68 @@
 module DataLoader
-  open FSharp.Data
-  let rng = System.Random()
 
-  type Location = 
-    {
-      address: string;
-      city: string;
-      state: string;
-      zip: string
-    }
+open FSharp.Data
+let rng = System.Random()
 
-  type Name =
-    {
-      First: string;
-      Last: string;
-    }
+type Location = 
+  {
+    address: string;
+    city: string;
+    state: string;
+    zip: string
+  }
 
-  module Name =
-    let firstName sex = 
-      if sex = "male"
-      then "John"
-      else "Jane"
-      
-    let lastName = "Smith"
+type Name =
+  {
+    First: string;
+    Last: string;
+  }
 
-    let fullName sex = 
-      {
-        First = firstName sex;
-        Last = (lastName);
-      }
-
-    let generate () =
-      let sex = 
-        if rng.NextDouble() <= 0.5
-        then "male"
-        else "female"
-      
-      fullName sex
-
-  module Location =
-    type ZipCodeDb = CsvProvider<"../data/zip_code_database.csv">
-    type StreetNameDb = CsvProvider<"../data/streets.csv">
-
-    let locationDb = ZipCodeDb.GetSample()
-    let streetNameDb = StreetNameDb.GetSample()
+module Name =
+  let firstName sex = 
+    if sex = "male"
+    then "John"
+    else "Jane"
     
-    let address = 
-        let result =
-          Array.ofSeq (streetNameDb.Rows)
-          |> Array.item (rng.Next(Seq.length streetNameDb.Rows))
+  let lastName = "Smith"
 
-        sprintf "%d %s" (rng.Next(9999)) result.Street
+  let fullName sex = 
+    {
+      First = firstName sex;
+      Last = (lastName);
+    }
 
-    let formatZip zipCode = 
-      if zipCode < 9999
-      then sprintf "0%d" zipCode
-      else string zipCode
+  let generate () =
+    let sex = 
+      if rng.NextDouble() <= 0.5
+      then "male"
+      else "female"
+    
+    fullName sex
 
-    let generate () =
-      let chosenLocation =
-        Array.ofSeq (locationDb.Rows)
-        |> Array.item (rng.Next(Seq.length locationDb.Rows))
+module Location =
+  let locationDb = CsvFile.Load "data/zip_code_database.csv"
+  let streetNameDb = CsvFile.Load "data/streets.csv"
+  
+  let address = 
+      let result =
+        Array.ofSeq (streetNameDb.Rows)
+        |> Array.item (rng.Next(Seq.length streetNameDb.Rows))
+      
+      sprintf "%d %s" (rng.Next(9999)) (result.Item 0)
 
-      {
-        address = (address)
-        state = chosenLocation.State;
-        zip = formatZip chosenLocation.Zip;
-        city = chosenLocation.Primary_city;
-      }
+  let formatZip zipCode = 
+    if zipCode < 9999
+    then sprintf "0%d" zipCode
+    else string zipCode
+
+  let generate () =
+    let chosenLocation =
+      Array.ofSeq (locationDb.Rows)
+      |> Array.item (rng.Next(Seq.length locationDb.Rows))
+    
+    {
+      address = (address)
+      state = chosenLocation.Item 5; // State, 6th column
+      zip = formatZip (int <| chosenLocation.Item 0); // Zip code. 1st column
+      city = chosenLocation.Item 2; // Primary City. 3rd column
+    }

@@ -1,4 +1,6 @@
-#r "../packages/FSharp.Data/lib/net40/FSharp.Data.dll"
+#I "/home/dswain/.nuget/packages"
+#r "fsharp.data/3.0.0/lib/netstandard2.0/FSharp.Data.dll"
+#r "fsharp.data/3.0.0/lib/netstandard2.0/FSharp.Data.DesignTime.dll"
 #load "Mockerana.fs"
 #load "DataLoader.fs"
 #load "FormatProcessor.fs"

@@ -11,7 +11,7 @@ That's what Mockerana is here to help with. It is a data-generation tool with a 
   * Believable names, real-ish looking street addresses, etc.
 * Allow for a little control over what data is shown
 
-## A quick example
+## Example
 
 Given this:
 
@@ -57,3 +57,9 @@ Get an output that looks like this:
   ]
 }
 ```
+
+## Demo
+
+To run the demo project, be sure to install the latest version of .NET Core and the CLI.
+
+To run: `dotnet run --project Mockerana.Demo`. You will see output similar to the Example section.
