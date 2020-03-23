@@ -18,17 +18,33 @@ type Name =
   }
 
 module Name =
+  let femaleNamesDb = CsvFile.Load "data/female_firstnames.csv"
+  let maleNamesDb = CsvFile.Load "data/male_firstnames.csv"
+  let lastNamesDb = CsvFile.Load "data/lastnames.csv"
+
   let firstName sex = 
-    if sex = "male"
-    then "John"
-    else "Jane"
+    let row = 
+      match sex with
+        | "male" ->
+          Array.ofSeq (maleNamesDb.Rows)
+          |> Array.item (rng.Next(Seq.length maleNamesDb.Rows))
+        | _ ->
+          Array.ofSeq (femaleNamesDb.Rows)
+          |> Array.item (rng.Next(Seq.length femaleNamesDb.Rows))
+    let name = (row.Item 0)
+    sprintf "%s%s" (name.Substring(0, 1).ToUpper()) (name.Substring(1).ToLower())
     
-  let lastName = "Smith"
+  let lastName () =
+    let row = 
+      Array.ofSeq (lastNamesDb.Rows)
+      |> Array.item (rng.Next(Seq.length lastNamesDb.Rows))
+    let name = (row.Item 0)
+    sprintf "%s%s" (name.Substring(0, 1).ToUpper()) (name.Substring(1).ToLower())
 
   let fullName sex = 
     {
       First = firstName sex;
-      Last = (lastName);
+      Last = lastName ();
     }
 
   let generate () =
