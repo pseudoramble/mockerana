@@ -97,5 +97,8 @@ let rec runAux (mockData: MockData) : JsonValue =
       JsonValue.String(FormatProcessor.run fmt spec)
 
 let run mockData =
+  runAux mockData
+
+let toString mockData =
   let toJsonValue = runAux mockData
   toJsonValue.ToString()

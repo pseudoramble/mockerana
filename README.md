@@ -29,11 +29,7 @@ let order = Record [
 ]
 ```
 
-When you do this:
-
-`JsonProcess.run order`
-
-Get an output that looks like this:
+Processing this using the `JsonProcessor` like this `JsonProcess.run order` you will receive output similar to this:
 
 ```
 {
@@ -62,4 +58,4 @@ Get an output that looks like this:
 
 To run the demo project, be sure to install the latest version of .NET Core and the CLI.
 
-To run: `dotnet run --project Mockerana.Demo`. You will see output similar to the Example section.
+To run: `dotnet run --project Mockerana.Demo`. The demo tries to provide an example of each available `MockData` type, including constraints that can be applied to the types. This isn't 100% complete, but should provide a decent reference on making your own specs.
